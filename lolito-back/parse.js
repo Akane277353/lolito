@@ -78,8 +78,13 @@ function parse_item(item, key) {
             stacks: item.stacks,
             consumed: item.consumed,
             consumeOnFull: item.consumeOnFull,
+            depth : item.depth,
 
         };
+
+        if(res.depth == undefined){
+            res.depth = 1;
+        }
         if (res.image == undefined) {
             res.image = [];
         } else {
@@ -284,3 +289,5 @@ function parse_items() {
 module.exports = {
     parse_items
 }
+
+
