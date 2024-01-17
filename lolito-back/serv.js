@@ -1,10 +1,16 @@
 const express = require('express')
-const app = express()
-const port = 3000
 const parse_items = require('./parse.js').parse_items;
 
+const app = express()
+const port = 3000
+const items = parse_items();
+
 app.get('/api/items', (req, res) => {
-  res.send(parse_items())
+  res.send(items)
+})
+
+app.get('/api/champions', (req, res) => {
+  res.send("not available yet")
 })
 
 app.listen(port, () => {
