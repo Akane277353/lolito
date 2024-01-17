@@ -6,7 +6,7 @@ const fs = require('fs');
 //==================================================================================================
 // Constantes
 //==================================================================================================
-PATH_item = "./item.json";
+PATH_item = "./data/item.json";
 
 //==================================================================================================
 // Fonctions Utiles
@@ -26,7 +26,7 @@ function item_desc_stats(item){
 
     return [],description
 }
-function parse_item(item) {
+function parse_item(item,key) {
 
 
     if(item.inStore == false || item.gold.purchasable != true || item.maps[11] != true || item.hideFromAll == true){
@@ -35,6 +35,7 @@ function parse_item(item) {
     else{
         res = {
             name: item.name,
+            id:key,
             gold: item.gold,
             plaintext : item.plaintext,
             image: item.image,
@@ -79,6 +80,22 @@ function parse_item(item) {
     }
 }
 
+function spread_liaison(item,items){
+    if(item.from != []){
+        for (let i = 0; i < item.from.length; i++) {
+            const id = item.from[i];
+            items[id].into.push(item.id);
+        }
+    }
+    if(item.into != []){
+        for (const key in item.into) {
+            const id = item.into[key];
+            items[id].from.push(item.id);
+        }
+    }
+
+}
+
 
 //==================================================================================================
 // Main
@@ -97,17 +114,18 @@ function parse_items() {
     for (const key in items_brut) {
         cpt++;
         let item = items_brut[key];
-        res = parse_item(item);
+        res = parse_item(item,key);
         if (res != undefined) {
             cpt2++;
             items.push(item);
         }
     }
     console.log(cpt, items.length,cpt2);
+    return items;
 }
 
 
-//parse_items();
+// parse_items();
 
 module.exports = {
     parse_items
