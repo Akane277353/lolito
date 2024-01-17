@@ -21,8 +21,8 @@ function clac_coords(item, items) {
             return [0,1];
         }
     }else{
-        let x = 0;
-        let y = 0;
+        let x = 1;
+        let y = 1;
         for (let i = 0; i < item.from.length; i++) {
             const id = item.from[i];
             co = clac_coords(items[id], items);
