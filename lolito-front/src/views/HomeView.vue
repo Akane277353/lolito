@@ -1,6 +1,6 @@
 <script setup>
 import ItemsGraph from '@/components/ItemsGraph.vue';
-import {onMounted} from 'vue';
+import {onMounted, ref} from 'vue';
 import {useItemsStore} from '@/stores/items-store/items-store';
 
 const storeItems = useItemsStore();
@@ -14,7 +14,8 @@ onMounted(() => {
 <template>
   <div class="home">
     <input id="search" type="text" />
-    <ItemsGraph id="item-graph" :items="storeItems.getItems" />
+    <!--<ItemsGraph id="item-graph" :items="storeItems.getItems" />-->
+    <ItemsGraph id="graph" :items="storeItems.getItems" />
   </div>
 </template>
 
@@ -31,7 +32,15 @@ onMounted(() => {
   margin-top: 50px;
   margin-bottom: 50px;
 }
-
+.graph {
+  width: 90%;
+  height: 800px;
+  border: 1px solid #000;
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+  background-color: #ffffff;
+}
 #item-graph {
   background-color: #ffffff;
   width: 90%;
