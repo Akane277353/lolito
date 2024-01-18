@@ -26,11 +26,8 @@ watchEffect(async () => {
     var cpt = 0
     props.items.forEach((item, i) => {
         item.from.forEach((frome) => {
-            if(true){
-              console.log(item.from)
-              edges.value[cpt] = { source: item.id.toString(), target: frome.toString() }
-            }
-            cpt++
+          edges.value[cpt] = { source: item.id.toString(), target: frome.toString() } 
+          cpt++
         });
 
     });
