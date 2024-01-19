@@ -18,8 +18,8 @@ app.get('/api/champions', (req, res) => {
   res.send("not available yet")
 })
 
-app.get('/api/recherche/:recherche:categorie', (req, res) => {
-  res.send(chercher(req.params.recherche, req.params.categorie))
+app.get('/api/recherche/:recherche/:categorie', (req, res) => {
+  res.send(chercher(req.params['recherche'], req.params['categorie']))
 })
 
 app.get('/api/categorie/:categorie', (req, res) => {
