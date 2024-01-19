@@ -26,24 +26,32 @@ function calc_stats(item) {
     return res;
 }
 
+
+
 function get_item_categories(item) {
-    let res = [];
+    let res = {
+        tank: false,
+        dps: false,
+        ap: false,
+        support: false,
+        mobility: false,
+    }
     let stats = calc_stats(item);
 
     if (stats.hasOwnProperty("FlatHPPoolMod") || stats.hasOwnProperty("FlatSpellBlockMod") || stats.hasOwnProperty("FlatArmorMod")) {
-        res.push("tank");
+        res.tank = true;
     }
     if (stats.hasOwnProperty("FlatCritChanceMod") || stats.hasOwnProperty("PercentAttackSpeedMod") || stats.hasOwnProperty("FlatPhysicalDamageMod") || stats.hasOwnProperty("PercentLifeStealMod")) {
-        res.push("dps");
+        res.dps = true;
     }
     if (stats.hasOwnProperty("FlatMagicDamageMod")) {
-        res.push("ap");
+        res.ap = true;
     }
     if (stats.hasOwnProperty("FlatMPPoolMod")) {
-        res.push("support");
+        res.support = true;
     }
     if (stats.hasOwnProperty("FlatMovementSpeedMod")) {
-        res.push("mobility");
+        res.mobility = true;
     }
     /*
     * FlatCritChanceMod
@@ -196,6 +204,9 @@ function parse_item(item, key) {
         res.description = brut[1];
         res.effect = brut[2];
 
+        res.categories = get_item_categories(item);
+        res.display = true;
+
 
 
         return res
@@ -315,6 +326,37 @@ function verifLiaison(items, permutation) {
 }
 
 
+function nomCompatible(nom, item){
+    if(item.name.toLowerCase().includes(nom.toLowerCase())){
+        return true;
+    }
+    if(item.plaintext.toLowerCase().includes(nom.toLowerCase())){
+        return true;
+    }
+    return false;
+}
+
+function validateLiaison(items,indices){
+    for(let i = 0; i < items.length; i++){
+        item = items[i];
+        newFrom = [];
+        newInto = [];
+        for(let j = 0; j < item.from.length; j++){
+            if(indices.includes(item.from[j])){
+                newFrom.push(item.from[j]);
+            }
+        }
+        for(let j = 0; j < item.into.length; j++){
+            if(indices.includes(item.into[j])){
+                newInto.push(item.into[j]);
+            }
+        }
+        item.from = newFrom;
+        item.into = newInto;
+    }
+}
+
+
 //==================================================================================================
 // Main
 //==================================================================================================
@@ -360,11 +402,43 @@ function parse_items() {
 }
 
 
+
+
+function chercher(nom,categories){
+    items = parse_items();
+    indices = [];
+
+    for(let i = 0; i < items.length; i++){
+        item = items[i];
+        item.display = false;
+        if(nomCompatible(nom,item)){
+            if(categories.length == 0){
+                indices.push(i);
+                item.display = true;
+            }else{
+                for(let j = 0; j < categories.length; j++){
+                    if(item.categories[categories[j]]){
+                        indices.push(i);
+                        item.display = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    validateLiaison(items,indices);
+
+    return items;
+
+
+}
 //parse_items();
 
 module.exports = {
     parse_items,
-    test
+    chercher,
+    categories : ["tank","dps","ap","support","mobility"]
 }
 
 
