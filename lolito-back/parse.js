@@ -8,7 +8,7 @@ const fs = require('fs');
 // Constantes
 //==================================================================================================
 PATH_item = "./data/item.json";
-Categories = ["tank","dps","ap","support","mobility"]
+Categories = ["tank","dps","ap","support","mobility","Autre"];
 
 //==================================================================================================
 // Fonctions Utiles
@@ -36,24 +36,36 @@ function get_item_categories(item) {
         ap: false,
         support: false,
         mobility: false,
+        Autre: false
     }
     let stats = calc_stats(item);
+    let noCate = true;
 
     if (stats.hasOwnProperty("FlatHPPoolMod") || stats.hasOwnProperty("FlatSpellBlockMod") || stats.hasOwnProperty("FlatArmorMod")) {
         res.tank = true;
+        noCate = false;
     }
     if (stats.hasOwnProperty("FlatCritChanceMod") || stats.hasOwnProperty("PercentAttackSpeedMod") || stats.hasOwnProperty("FlatPhysicalDamageMod") || stats.hasOwnProperty("PercentLifeStealMod")) {
         res.dps = true;
+        noCate = false;
     }
     if (stats.hasOwnProperty("FlatMagicDamageMod")) {
         res.ap = true;
+        noCate = false;
     }
     if (stats.hasOwnProperty("FlatMPPoolMod")) {
         res.support = true;
+        noCate = false;
     }
     if (stats.hasOwnProperty("FlatMovementSpeedMod")) {
         res.mobility = true;
+        noCate = false;
     }
+
+    if (noCate) {
+        res.Autre = true;
+    }
+
     /*
     * FlatCritChanceMod
     * FlatHPPoolMod
@@ -444,7 +456,6 @@ function chercher(nom,categories){
         item.display = false;
         if(nomCompatible(nom,item)){
             if(categories.length == 0){
-                console.log("ok");
                 indices.push(i);
                 item.display = true;
                 addDependance(item,items,dependances);
