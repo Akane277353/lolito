@@ -60,6 +60,28 @@ function get_item_categories(item) {
     return res;
 }
 
+
+function clac_coords(item, items) {
+    if(item.from.length == 0){
+        if(item.into.length == 0){
+            return [0,0];
+        }else{
+            return [0,1];
+        }
+    }else{
+        let x = 1;
+        let y = 1;
+        for (let i = 0; i < item.from.length; i++) {
+            const id = item.from[i];
+            co = clac_coords(items[id], items);
+            x += co[0];
+            y += co[1];
+        }
+        return [x,y];
+    }
+
+}
+
 let balsie = {};
 function item_desc_stats(item) {
     if (item.description == undefined || item.description == "") {
@@ -325,14 +347,20 @@ function parse_items() {
         spread_liaison(item, items, permutation);
     }
     verifLiaison(items, permutation);
+
+
+    for(let i = 0; i < items.length; i++){
+        items[i].id = i;
+        items[i].coords = clac_coords(items[i], items);
+    }
     // console.log(balsie);
-    // console.log(items);
+    //console.log(items);
     // console.log(cpt, cpt2);
     return items;
 }
 
 
-// parse_items();
+//parse_items();
 
 module.exports = {
     parse_items,
