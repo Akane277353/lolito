@@ -1,4 +1,5 @@
 <script setup>
+import NodeMenu from './NodeMenu.vue';
 import { watchEffect, reactive , ref} from 'vue';
 import * as vNG from "v-network-graph"
 import {
@@ -15,11 +16,16 @@ var nodes = ref({})
 
 var edges = ref({})
 
+const selectedItem = ref({})
+
+const showMenu = ref(false)
 
 watchEffect(async () => {
+  nodes.value = {}
+  edges.value = {}
   if(props.items.length > 0){
     props.items.forEach((item, i) => {
-        if(!nodes.value.hasOwnProperty(item.id)){
+        if(!nodes.value.hasOwnProperty(item.id) && item.display == true){
             nodes.value[item.id] = { name: item.name, face: item.image.full }
         }
     });
@@ -56,6 +62,13 @@ const configs = reactive(
 )
 
 
+const eventHandlers = {
+  "node:click": ({ node }) => {
+    selectedItem.value = props.items[node]
+    showMenu.value = true
+  },
+}
+
 </script>
 
 <template>
@@ -65,6 +78,7 @@ const configs = reactive(
     :nodes="nodes"
     :edges="edges"
     :configs="configs"
+    :event-handlers="eventHandlers"
   >
   <defs>
       <!--
@@ -111,11 +125,19 @@ const configs = reactive(
       />
     </template>
   </v-network-graph>
+  <NodeMenu v-if="showMenu" class="node-menu" :item="selectedItem" @close="showMenu = false" />
 
 </template>
 
 <style scoped>
-
+.graph {
+  width: 90%;
+  height: 750px;
+  border: 1px solid #000;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #ffffff;
+}
 .face-circle,
 .face-picture {
   transition: all 0.1s linear;
@@ -124,4 +146,5 @@ const configs = reactive(
 .face-picture {
   pointer-events: none;
 }
+
 </style>
