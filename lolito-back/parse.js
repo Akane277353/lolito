@@ -8,6 +8,7 @@ const fs = require('fs');
 // Constantes
 //==================================================================================================
 PATH_item = "./data/item.json";
+Categories = ["tank","dps","ap","support","mobility"]
 
 //==================================================================================================
 // Fonctions Utiles
@@ -356,6 +357,25 @@ function validateLiaison(items,indices){
     }
 }
 
+function addDependance(item,items,dependances){
+    for(let i = 0; i < item.from.length; i++){
+        let id = item.from[i];
+        if(!dependances.includes(id)){
+            dependances.push(id);
+            addDependance(items[id],items,dependances);
+        }
+    }
+    // for(let i = 0; i < item.into.length; i++){
+    //     let id = item.into[i];
+    //     if(!dependances.includes(id)){
+    //         dependances.push(id);
+    //         addDependance(items[id],items,dependances);
+    //     }
+    // }
+    
+}
+
+
 
 //==================================================================================================
 // Main
@@ -403,10 +423,11 @@ function parse_items() {
 
 
 
-
 function chercher(nom,categories){
     items = parse_items();
     indices = [];
+    dependances = [];
+
 
     for(let i = 0; i < items.length; i++){
         item = items[i];
@@ -415,15 +436,24 @@ function chercher(nom,categories){
             if(categories.length == 0){
                 indices.push(i);
                 item.display = true;
+                addDependance(item,items,dependances);
             }else{
                 for(let j = 0; j < categories.length; j++){
                     if(item.categories[categories[j]]){
                         indices.push(i);
                         item.display = true;
+                        addDependance(item,items,dependances);
                         break;
                     }
                 }
             }
+        }
+    }
+
+    for(let i = 0; i < dependances.length; i++){
+        if(!indices.includes(dependances[i])){
+            indices.push(dependances[i]);
+            items[dependances[i]].display = true;
         }
     }
 
@@ -438,7 +468,7 @@ function chercher(nom,categories){
 module.exports = {
     parse_items,
     chercher,
-    categories : ["tank","dps","ap","support","mobility"]
+    categories:Categories
 }
 
 
