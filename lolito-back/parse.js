@@ -338,6 +338,7 @@ function nomCompatible(nom, item){
 }
 
 function validateLiaison(items,indices){
+
     for(let i = 0; i < items.length; i++){
         item = items[i];
         newFrom = [];
@@ -355,6 +356,8 @@ function validateLiaison(items,indices){
         item.from = newFrom;
         item.into = newInto;
     }
+
+
 }
 
 function addDependance(item,items,dependances){
@@ -424,6 +427,13 @@ function parse_items() {
 
 
 function chercher(nom,categories){
+    if(categories == "!"){
+        categories = [];
+    }else{
+        categories = categories.split("!");
+
+    }
+
     items = parse_items();
     indices = [];
     dependances = [];
@@ -434,6 +444,7 @@ function chercher(nom,categories){
         item.display = false;
         if(nomCompatible(nom,item)){
             if(categories.length == 0){
+                console.log("ok");
                 indices.push(i);
                 item.display = true;
                 addDependance(item,items,dependances);
@@ -458,12 +469,17 @@ function chercher(nom,categories){
     }
 
     validateLiaison(items,indices);
+    // for(let i = 0; i < indices.length; i++){
+    //     console.log(items[indices[i]]);
+    // }
 
     return items;
 
 
 }
 //parse_items();
+
+// chercher("Brillance",[]);
 
 module.exports = {
     parse_items,
