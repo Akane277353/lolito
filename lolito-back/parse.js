@@ -8,7 +8,7 @@ const fs = require('fs');
 // Constantes
 //==================================================================================================
 PATH_item = "./data/item.json";
-Categories = ["tank","dps","ap","support","mobility","Autre"];
+Categories = ["tank","dps","ap","support","mobility","jungle","Autre"];
 
 //==================================================================================================
 // Fonctions Utiles
@@ -24,6 +24,10 @@ function calc_stats(item) {
             res[key] = element;
         }
     }
+
+    if(item.tags.length ==1 && item.tags[0] == "Jungle"){
+        stats.Jungle = 1;
+    }
     return res;
 }
 
@@ -36,6 +40,7 @@ function get_item_categories(item) {
         ap: false,
         support: false,
         mobility: false,
+        jungle: false,
         Autre: false
     }
     let stats = calc_stats(item);
@@ -59,6 +64,10 @@ function get_item_categories(item) {
     }
     if (stats.hasOwnProperty("FlatMovementSpeedMod")) {
         res.mobility = true;
+        noCate = false;
+    }
+    if (stats.hasOwnProperty("Jungle")) {
+        res.jungle = true;
         noCate = false;
     }
 
@@ -216,6 +225,8 @@ function parse_item(item, key) {
         res.stats = brut[0];
         res.description = brut[1];
         res.effect = brut[2];
+
+        res.tags = item.tags;
 
         res.categories = get_item_categories(item);
         res.display = true;
