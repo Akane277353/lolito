@@ -26,6 +26,7 @@ function calc_stats(item) {
     }
 
     if("Jungle" in item.tags){
+        print(item.name);
         stats.Jungle = 1;
     }
     return res;
