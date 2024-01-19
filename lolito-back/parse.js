@@ -1,6 +1,7 @@
 //==================================================================================================
 // Importation des modules
 //==================================================================================================
+const { randomInt } = require('crypto');
 const fs = require('fs');
 
 //==================================================================================================
@@ -11,6 +12,53 @@ PATH_item = "./data/item.json";
 //==================================================================================================
 // Fonctions Utiles
 //==================================================================================================
+
+
+function calc_stats(item) {
+    let res = {};
+    let stats = item.stats;
+    for (const key in stats) {
+        if (stats.hasOwnProperty(key)) {
+            const element = stats[key];
+            res[key] = element;
+        }
+    }
+    return res;
+}
+
+function get_item_categories(item) {
+    let res = [];
+    let stats = calc_stats(item);
+
+    if (stats.hasOwnProperty("FlatHPPoolMod") || stats.hasOwnProperty("FlatSpellBlockMod") || stats.hasOwnProperty("FlatArmorMod")) {
+        res.push("tank");
+    }
+    if (stats.hasOwnProperty("FlatCritChanceMod") || stats.hasOwnProperty("PercentAttackSpeedMod") || stats.hasOwnProperty("FlatPhysicalDamageMod") || stats.hasOwnProperty("PercentLifeStealMod")) {
+        res.push("dps");
+    }
+    if (stats.hasOwnProperty("FlatMagicDamageMod")) {
+        res.push("ap");
+    }
+    if (stats.hasOwnProperty("FlatMPPoolMod")) {
+        res.push("support");
+    }
+    if (stats.hasOwnProperty("FlatMovementSpeedMod")) {
+        res.push("mobility");
+    }
+    /*
+    * FlatCritChanceMod
+    * FlatHPPoolMod
+    * PercentAttackSpeedMod
+    * PercentMovementSpeedMod
+    * FlatMovementSpeedMod
+    * FlatArmorMod
+    * FlatPhysicalDamageMod
+    * PercentLifeStealMod
+    * FlatSpellBlockMod
+    * FlatMPPoolMod
+    */
+    return res;
+}
 
 let balsie = {};
 function item_desc_stats(item) {
@@ -287,7 +335,8 @@ function parse_items() {
 // parse_items();
 
 module.exports = {
-    parse_items
+    parse_items,
+    test
 }
 
 
