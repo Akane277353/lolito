@@ -25,7 +25,7 @@ function calc_stats(item) {
         }
     }
 
-    if(item.tags.length ==1 && item.tags[0] == "Jungle"){
+    if("Jungle" in item.tags){
         stats.Jungle = 1;
     }
     return res;
