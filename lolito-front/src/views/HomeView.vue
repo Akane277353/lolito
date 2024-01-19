@@ -29,7 +29,6 @@ watch([search, categorie], () => {
         <option v-for="categorie in storeItems.getCategories" :value="categorie">{{ categorie }}</option>
       </select>
     </div>
-    <!--<ItemsGraph id="item-graph" :items="storeItems.getItems" />-->
     <ItemsGraph :items="storeItems.getItems" />
   </div>
 </template>
