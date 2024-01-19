@@ -12,6 +12,6 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
-  background-color: #6748a0;
+  background-color: #04132b;
 }
 </style>

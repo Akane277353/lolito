@@ -1,53 +1,70 @@
 <script setup>
 import ItemsGraph from '@/components/ItemsGraph.vue';
-import {onMounted, ref} from 'vue';
+import {onMounted, ref, watch} from 'vue';
 import {useItemsStore} from '@/stores/items-store/items-store';
 
 const storeItems = useItemsStore();
 
+const search = ref('');
+const categorie = ref('!');
 onMounted(() => {
+  storeItems.getAllCategories();
   storeItems.getAllItems();
 })
+
+watch([search, categorie], () => {
+  storeItems.searchItem(search.value, categorie.value);
+})
+
 
 </script>
 
 <template>
   <div class="home">
-    <input id="search" type="text" />
+    <img id="logo" src="../assets/logo.png" alt="logo" width="200">
+    <div class="recherche">
+      <input id="search" type="text" v-model="search" placeholder="Recherche"/>
+      <select id="search" v-model="categorie">
+        <option value="!">Toutes les catégories</option>
+        <option v-for="categorie in storeItems.getCategories" :value="categorie">{{ categorie }}</option>
+      </select>
+    </div>
     <!--<ItemsGraph id="item-graph" :items="storeItems.getItems" />-->
-    <ItemsGraph id="graph" :items="storeItems.getItems" />
+    <ItemsGraph :items="storeItems.getItems" />
   </div>
 </template>
 
 <style scoped>
 .home {
   display: flex;
-  flex-direction: column;
+  flex-direction: column;  
+}
+
+.recherche {
+  display: flex;
+}
+
+#logo {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #search {
   width: 300px;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 50px;
-  margin-bottom: 50px;
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #666;
+  border-radius: 5px;
+  background-color: #0e0e0e; 
+  color: #fff; 
+  margin-bottom: 10px;
 }
-.graph {
-  width: 90%;
-  height: 800px;
-  border: 1px solid #000;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: hidden;
-  background-color: #ffffff;
+
+#search::placeholder {
+  color: #999; 
 }
-#item-graph {
-  background-color: #ffffff;
-  width: 90%;
-  margin: 0;
-  padding: 0;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: hidden;
-}
+
+
 </style>
