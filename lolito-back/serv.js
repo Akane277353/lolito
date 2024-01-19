@@ -8,9 +8,6 @@ const app = express()
 const port = 3000
 const items = parse_items();
 
-const test = require('./parse.js').test;
-test()
-
 app.use(cors());
 
 app.get('/api/items', (req, res) => {
